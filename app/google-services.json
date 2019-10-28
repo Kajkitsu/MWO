@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "233649663954",
+    "firebase_url": "https://knurexpol.firebaseio.com",
+    "project_id": "knurexpol",
+    "storage_bucket": "knurexpol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233649663954:android:f51fcd76dc6269c964a20b",
+        "android_client_info": {
+          "package_name": "com.example.knurexpol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233649663954-timlvk560h2osfihbil8f3rmedtqtt65.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVBVzE4Fo4VQX50j4DzYcHJZpzghAeHa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233649663954-timlvk560h2osfihbil8f3rmedtqtt65.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
