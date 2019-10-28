@@ -15,6 +15,7 @@ package com.example.knurexpol;
  * limitations under the License.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity implements
             View.OnClickListener {
 
-        private static final String TAG = "EmailPassword";
+        private static final String TAG = "LoginActivity";
 
         private TextView mStatusTextView;
         private TextView mDetailTextView;
@@ -60,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements
             findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
             findViewById(R.id.signOutButton).setOnClickListener(this);
             findViewById(R.id.verifyEmailButton).setOnClickListener(this);
+            findViewById(R.id.startAppButton).setOnClickListener(this);
+
 
             // [START initialize_auth]
             // Initialize Firebase Auth
@@ -215,16 +218,24 @@ public class LoginActivity extends AppCompatActivity implements
 
                 findViewById(R.id.emailPasswordButtons).setVisibility(View.GONE);
                 findViewById(R.id.emailPasswordFields).setVisibility(View.GONE);
+                findViewById(R.id.startAppButton).setVisibility(View.VISIBLE);
                 findViewById(R.id.signedInButtons).setVisibility(View.VISIBLE);
 
                 findViewById(R.id.verifyEmailButton).setEnabled(!user.isEmailVerified());
+
+                findViewById(R.id.startAppButton).setEnabled(user.isEmailVerified());
+
+
+
             } else {
                 mStatusTextView.setText(R.string.signed_out);
                 mDetailTextView.setText(null);
 
                 findViewById(R.id.emailPasswordButtons).setVisibility(View.VISIBLE);
                 findViewById(R.id.emailPasswordFields).setVisibility(View.VISIBLE);
+                findViewById(R.id.startAppButton).setVisibility(View.GONE);
                 findViewById(R.id.signedInButtons).setVisibility(View.GONE);
+                findViewById(R.id.startAppButton).setEnabled(false);
             }
         }
 
@@ -239,6 +250,9 @@ public class LoginActivity extends AppCompatActivity implements
                 signOut();
             } else if (i == R.id.verifyEmailButton) {
                 sendEmailVerification();
+            } else if (i == R.id.startAppButton) {
+                Intent myIntent = new Intent(this, MenuActivity.class);
+                startActivity(myIntent);
             }
         }
     }
