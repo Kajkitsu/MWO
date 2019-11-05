@@ -40,6 +40,7 @@ public class MenuActivity extends AppCompatActivity implements
         mDetailTextView = findViewById(R.id.detail);
 
         findViewById(R.id.signOutButton).setOnClickListener(this);
+        findViewById(R.id.upload_activity_button).setOnClickListener(this);
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -71,6 +72,9 @@ public class MenuActivity extends AppCompatActivity implements
         if (i == R.id.signOutButton) {
             signOut();
             Intent myIntent = new Intent(this, StartActivity.class);
+            startActivity(myIntent);
+        } else if (i == R.id.upload_activity_button) {
+            Intent myIntent = new Intent(this, UploadListActivity.class);
             startActivity(myIntent);
         }
 
