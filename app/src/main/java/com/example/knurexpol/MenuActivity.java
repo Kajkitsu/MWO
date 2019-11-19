@@ -74,7 +74,7 @@ public class MenuActivity extends AppCompatActivity implements
             Intent myIntent = new Intent(this, StartActivity.class);
             startActivity(myIntent);
         } else if (i == R.id.upload_activity_button) {
-            Intent myIntent = new Intent(this, UploadListActivity.class);
+            Intent myIntent = new Intent(this, AdminPanelActivity.class);
             startActivity(myIntent);
         }
 

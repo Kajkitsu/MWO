@@ -25,11 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity implements
             View.OnClickListener {
@@ -41,9 +46,10 @@ public class LoginActivity extends AppCompatActivity implements
         private EditText mEmailField;
         private EditText mPasswordField;
 
-        // [START declare_auth]
+
+        private FirebaseFunctions mFunctions;
         private FirebaseAuth mAuth;
-        // [END declare_auth]
+
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +70,11 @@ public class LoginActivity extends AppCompatActivity implements
             findViewById(R.id.startAppButton).setOnClickListener(this);
 
 
-            // [START initialize_auth]
-            // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
-            // [END initialize_auth]
+            mFunctions = FirebaseFunctions.getInstance();
         }
 
-        // [START on_start_check_user]
+
         @Override
         public void onStart() {
             super.onStart();
@@ -78,9 +82,6 @@ public class LoginActivity extends AppCompatActivity implements
             FirebaseUser currentUser = mAuth.getCurrentUser();
             updateUI(currentUser);
         }
-        // [END on_start_check_user]
-
-
 
         private void createAccount(String email, String password) {
             Log.d(TAG, "createAccount:" + email);
@@ -103,6 +104,7 @@ public class LoginActivity extends AppCompatActivity implements
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
+                                addUserToFirebase();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 updateUI(user);
                             } else {
@@ -118,6 +120,78 @@ public class LoginActivity extends AppCompatActivity implements
             // [END create_user_with_email]
         }
 
+    private Task<HashMap> addUserToListFunction() {
+        // Create the arguments to the callable function.
+
+        return mFunctions
+                .getHttpsCallable("addUserToListFunction")
+                .call()
+                .continueWith(new Continuation<HttpsCallableResult, HashMap>() {
+                    @Override
+                    public HashMap then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        HashMap result = (HashMap) task.getResult().getData();
+                        return result;
+                    }
+                });
+    }
+
+        public void addUserToFirebase(){
+            addUserToListFunction().addOnCompleteListener(this, new OnCompleteListener<HashMap>() {
+                @Override
+                public void onComplete(@NonNull Task<HashMap> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "addUserToListFunction:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "addUserToListFunction:failure", task.getException());
+                        updateUI(null);
+                    }
+                }
+            });
+        }
+
+    private Task<HashMap> isUserOnListFunction() {
+        // Create the arguments to the callable function.
+
+        return mFunctions
+                .getHttpsCallable("isUserOnListFunction")
+                .call()
+                .continueWith(new Continuation<HttpsCallableResult, HashMap>() {
+                    @Override
+                    public HashMap then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        HashMap result = (HashMap) task.getResult().getData();
+                        return result;
+                    }
+                });
+    }
+
+    public void isUserOnListToFirebase(){
+        isUserOnListFunction().addOnCompleteListener(this, new OnCompleteListener<HashMap>() {
+            @Override
+            public void onComplete(@NonNull Task<HashMap> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "isUserOnListFunction:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateUI(user);
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "isUserOnListFunction:failure", task.getException());
+                    updateUI(null);
+                }
+            }
+        });
+    }
+
         private void signIn(String email, String password) {
             Log.d(TAG, "signIn:" + email);
             if (!validateForm()) {
@@ -132,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
+                                isUserOnListToFirebase();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 updateUI(user);
                             } else {
